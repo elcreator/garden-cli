@@ -42,6 +42,8 @@ class CliApplication extends Cli
     const OPT_SETTERS = "setters";
     const OPT_DESCRIPTION = "description";
     const OPT_PREFIX = "prefix";
+    const OPT_REQUIRED = "required";
+    const OPT_REQUIRED_ALL = "requiredAll";
     const OPT_COMMAND_REGEX = "commandRegex";
 
     /**
@@ -256,6 +258,8 @@ class CliApplication extends Cli
                 $methodName
             ),
             self::OPT_SETTERS => false,
+            self::OPT_REQUIRED => [],
+            self::OPT_REQUIRED_ALL => false,
             self::OPT_DESCRIPTION => null,
         ];
 
@@ -280,7 +284,7 @@ class CliApplication extends Cli
                 $method->isStatic() ? "staticSetterFilter" : "setterFilter",
             ];
 
-            $this->addSetters($class, $setterFilter);
+            $this->addSetters($class, $setterFilter, $options);
         }
 
         return $this;
@@ -539,7 +543,8 @@ class CliApplication extends Cli
      */
     final protected function addSetters(
         ReflectionClass $class,
-        callable $filter = null
+        callable $filter = null,
+        $options = [self::OPT_REQUIRED => [], self::OPT_REQUIRED_ALL => false]
     ): void {
         /**
          * @var  string $optName
@@ -565,7 +570,8 @@ class CliApplication extends Cli
             } else {
                 $description = "";
             }
-            $this->opt($optName, $description, false, $type, [
+            $this->opt($optName, $description, $options[self::OPT_REQUIRED_ALL] ||
+                in_array($optName, $options[self::OPT_REQUIRED]), $type, [
                 self::META_DISPATCH_TYPE => self::TYPE_CALL,
                 self::META_DISPATCH_VALUE => $method->getName(),
             ]);
