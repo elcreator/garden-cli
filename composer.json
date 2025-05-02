@@ -17,7 +17,7 @@
 		"ergebnis/composer-normalize": "^2.8",
 		"phpdocumentor/reflection-docblock": "^5.3",
 		"phpunit/phpunit": "^9 || ^10 || ^11 || ^12",
-		"vanilla/garden-container": "^3.0",
+		"vanilla/garden-container": "^v4.2.0",
 		"vimeo/psalm": "^4.0 || ^5.0 || ^6.0"
 	},
 	"suggest": {

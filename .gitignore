@@ -2,4 +2,5 @@
 .idea/
 composer.lock
 coverage.clover
+.phpunit.cache/
 .phpunit.result.cache
