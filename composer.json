@@ -26,10 +26,8 @@
 		"vanilla/garden-container": "Required for the CliApplication functionality."
 	},
 	"config": {
-		"config": {
-			"platform": {
-				"php": "8.1"
-			}
+		"platform": {
+			"php": "8.1"
 		},
 		"require": {
 			"php": "^8.1"
