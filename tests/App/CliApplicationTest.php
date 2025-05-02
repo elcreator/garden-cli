@@ -9,14 +9,13 @@ namespace Garden\Cli\Tests\App;
 
 use Garden\Cli\Application\CliApplication;
 use Garden\Cli\Args;
-use Garden\Cli\Tests\AbstractCliTest;
-use Garden\Cli\Tests\Fixtures\Application;
+use Garden\Cli\Tests\CliTestBase;
 use Garden\Cli\Tests\Fixtures\Db;
 use Garden\Cli\Tests\Fixtures\RealCommand;
 use Garden\Cli\Tests\Fixtures\TestApplication;
 use Garden\Cli\Tests\Fixtures\TestCommands;
 
-class CliApplicationTest extends AbstractCliTest
+class CliApplicationTest extends CliTestBase
 {
     /**
      * @var CliApplication

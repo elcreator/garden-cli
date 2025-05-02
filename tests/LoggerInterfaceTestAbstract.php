@@ -1,7 +1,8 @@
 <?php
 
-namespace Psr\Log\Test;
+namespace Garden\Cli\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -13,7 +14,7 @@ use Psr\Log\LogLevel;
  * Implementors can extend the class and implement abstract methods to run this
  * as part of their test suite.
  */
-abstract class LoggerInterfaceTest extends TestCase
+abstract class LoggerInterfaceTestAbstract extends TestCase
 {
     /**
      * @return LoggerInterface
@@ -39,6 +40,7 @@ abstract class LoggerInterfaceTest extends TestCase
     /**
      * @dataProvider provideLevelsAndMessages
      */
+    #[DataProvider('provideLevelsAndMessages')]
     public function testLogsAtAllLevels($level, $message)
     {
         $logger = $this->getLogger();
@@ -52,7 +54,7 @@ abstract class LoggerInterfaceTest extends TestCase
         $this->assertEquals($expected, $this->getLogs());
     }
 
-    public function provideLevelsAndMessages()
+    public static function provideLevelsAndMessages()
     {
         return [
             LogLevel::EMERGENCY => [
@@ -114,16 +116,16 @@ abstract class LoggerInterfaceTest extends TestCase
     public function testObjectCastToString()
     {
         if (method_exists($this, "createPartialMock")) {
-            $dummy = $this->createPartialMock("Psr\Log\Test\DummyTest", [
+            $dummy = $this->createPartialMock("Garden\\Cli\\Tests\\DummyTest", [
                 "__toString",
             ]);
         } else {
-            $dummy = $this->getMock("Psr\Log\Test\DummyTest", ["__toString"]);
+            $dummy = $this->createMock("Garden\\Cli\\Tests\\DummyTest");
         }
         $dummy
             ->expects($this->once())
             ->method("__toString")
-            ->will($this->returnValue("DUMMY"));
+            ->willReturn("DUMMY");
 
         $this->getLogger()->warning($dummy);
 

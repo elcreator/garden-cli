@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Todd Burry <todd@vanillaforums.com>
  * @copyright 2009-2019 Vanilla Forums Inc.
@@ -20,16 +21,16 @@ class Cli
 {
     /// Constants ///
 
-    const META = "__meta";
-    const ARGS = "__args";
+    public const META = "__meta";
+    public const ARGS = "__args";
 
-    const COMMAND_ARGS_NONE = 0;
-    const COMMAND_ARGS_OPTIONAL = 1;
-    const COMMAND_ARGS_REQUIRED = 2;
+    public const COMMAND_ARGS_NONE = 0;
+    public const COMMAND_ARGS_OPTIONAL = 1;
+    public const COMMAND_ARGS_REQUIRED = 2;
 
-    const TYPE_INTEGER = "integer";
-    const TYPE_STRING = "string";
-    const TYPE_BOOLEAN = "boolean";
+    public const TYPE_INTEGER = "integer";
+    public const TYPE_STRING = "string";
+    public const TYPE_BOOLEAN = "boolean";
 
     /// Properties ///
     /**
@@ -128,9 +129,10 @@ class Cli
      * @param string $text The text of the cell.
      * @param int $width The width of the cell.
      * @param bool $addSpaces Whether or not to right-pad the cell with spaces.
-     * @return string[] Returns an array of strings representing the lines in the cell.
      *
-     * @psalm-return array<int, string>
+     * @return string[]
+     *
+     * @psalm-return list<string>
      */
     public static function breakLines(
         string $text,
@@ -155,9 +157,10 @@ class Cli
      * @param string $line The text of the line.
      * @param int $width The width of the cell.
      * @param bool $addSpaces Whether or not to right pad the lines with spaces.
-     * @return string[] Returns an array of lines broken on word boundaries.
      *
-     * @psalm-return array<int, string>
+     * @return string[]
+     *
+     * @psalm-return list{0?: string,...}
      */
     protected static function breakString(
         string $line,
@@ -263,7 +266,10 @@ class Cli
      * Determines whether or not a command has args.
      *
      * @param string $command The command name to check.
+     *
      * @return int Returns one of the following `COMMAND_ARGS_*` constants.
+     *
+     * @psalm-return 0|1|2
      */
     public function hasArgs(string $command = ""): int
     {
@@ -316,11 +322,12 @@ class Cli
      * @param array|null $argv Command line arguments compatible with the global `$argv` variable.
      * @param bool $exit Whether to exit the application when there is an error or when writing help.
      *
-     * @return Args Returns an {@see Args} instance when a command should be executed or `null` when one should not be executed.
+     * @return Args Returns an {@see Args} instance when a command should be executed or `null` when one should not
+     * be executed.
      *
      * @throws Exception Throws an exception when {@link $exit} is false and the help or errors need to be displayed.
      */
-    public function parse(array $argv = null, bool $exit = true): Args
+    public function parse(?array $argv = null, bool $exit = true): Args
     {
         $formatOutputBak = $this->formatOutput;
         // Only format commands if we are exiting.
@@ -812,6 +819,7 @@ class Cli
      * Bold some text.
      *
      * @param string $text The text to format.
+     *
      * @return string Returns the text surrounded by formatting commands.
      */
     public static function boldText(string $text): string
@@ -834,7 +842,8 @@ class Cli
      * Make some text red.
      *
      * @param string $text The text to format.
-     * @return string Returns  text surrounded by formatting commands.
+     *
+     * @return string Returns text surrounded by formatting commands.
      */
     public static function redText(string $text): string
     {
@@ -856,7 +865,8 @@ class Cli
      * Make some text green.
      *
      * @param string $text The text to format.
-     * @return string Returns  text surrounded by formatting commands.
+     *
+     * @return string Returns text surrounded by formatting commands.
      */
     public static function greenText(string $text): string
     {
@@ -878,7 +888,8 @@ class Cli
      * Make some text blue.
      *
      * @param string $text The text to format.
-     * @return string Returns  text surrounded by formatting commands.
+     *
+     * @return string Returns text surrounded by formatting commands.
      */
     public static function blueText(string $text): string
     {
@@ -900,7 +911,8 @@ class Cli
      * Make some text purple.
      *
      * @param string $text The text to format.
-     * @return string Returns  text surrounded by formatting commands.
+     *
+     * @return string Returns text surrounded by formatting commands.
      */
     public static function purpleText(string $text): string
     {
@@ -978,7 +990,7 @@ class Cli
         &$value,
         string $type,
         string $name = "",
-        OptSchema $def = null
+        ?OptSchema $def = null
     ): bool {
         if ($def !== null && $def->isArray()) {
             $value = (array) $value;
@@ -1219,7 +1231,7 @@ class Cli
     /**
      * Safely get a value out of an array.
      *
-     * This function uses optimizations found in the [facebook libphputil library](https://github.com/facebook/libphutil).
+     * This function uses optimizations found in the [facebook libphputil lib](https://github.com/facebook/libphutil).
      *
      * @param string|int $key The array key.
      * @param array $array The array to get the value from.

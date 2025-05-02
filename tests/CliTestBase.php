@@ -9,7 +9,7 @@ namespace Garden\Cli\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractCliTest extends TestCase
+class CliTestBase extends TestCase
 {
     /**
      * Assert that a deep array is a subset of another deep array.

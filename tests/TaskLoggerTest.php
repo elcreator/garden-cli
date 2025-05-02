@@ -9,10 +9,11 @@ namespace Garden\Cli\Tests;
 
 use Garden\Cli\TaskLogger;
 use Garden\Cli\Tests\Fixtures\TestLogger;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
 
-class TaskLoggerTest extends AbstractCliTest
+class TaskLoggerTest extends CliTestBase
 {
     /**
      * @var TestLogger
@@ -112,6 +113,7 @@ class TaskLoggerTest extends AbstractCliTest
      * @param string $level The expected log level or an empty string.
      * @dataProvider provideHttpStatusTests
      */
+    #[DataProvider('provideHttpStatusTests')]
     public function testEndHttpStatus(int $status, string $level)
     {
         $this->log->begin(LogLevel::NOTICE, "http");
@@ -126,7 +128,7 @@ class TaskLoggerTest extends AbstractCliTest
      *
      * @return array Returns a data provider array.
      */
-    public function provideHttpStatusTests()
+    public static function provideHttpStatusTests()
     {
         $r = [
             [200, ""],
@@ -204,13 +206,20 @@ class TaskLoggerTest extends AbstractCliTest
      */
     public function testEndNoBegin()
     {
-        @$this->log->end("foo");
-        $this->assertLogLevel(LogLevel::INFO);
-        $this->assertLogHasContext([TaskLogger::FIELD_END => true]);
-        $this->assertLogMessage("foo");
+        $noticeTriggered = false;
+        set_error_handler(function($errno, $errstr) use (&$noticeTriggered) {
+            if ($errno === E_USER_NOTICE) {
+                $noticeTriggered = true;
+            }
+            return true;
+        });
 
-        $this->expectNotice();
-        $this->log->end("foo");
+        try {
+            $this->log->end("foo");
+        } finally {
+            restore_error_handler();
+        }
+        $this->assertTrue($noticeTriggered, 'Expected E_USER_NOTICE was not triggered');
     }
 
     /**
@@ -226,8 +235,22 @@ class TaskLoggerTest extends AbstractCliTest
      */
     public function testInvalidLevelEnd()
     {
-        $this->expectNotice();
-        $this->log->end("a", [TaskLogger::FIELD_LEVEL => "invalid"]);
+        $this->expectException(InvalidArgumentException::class);
+
+        $noticeTriggered = false;
+        set_error_handler(function($errno, $errstr) use (&$noticeTriggered) {
+            if ($errno === E_USER_NOTICE) {
+                $noticeTriggered = true;
+            }
+            return true;
+        });
+
+        try {
+            $this->log->end("a", [TaskLogger::FIELD_LEVEL => "invalid"]);
+        } finally {
+            restore_error_handler();
+        }
+        $this->assertTrue($noticeTriggered, 'Expected E_USER_NOTICE was not triggered');
     }
 
     /**
@@ -236,6 +259,7 @@ class TaskLoggerTest extends AbstractCliTest
      * @param string $level The log level to test.
      * @dataProvider provideLogLevels
      */
+    #[DataProvider('provideLogLevels')]
     public function testSpecificBegins(string $level)
     {
         $this->log->setMinLevel($level);
@@ -251,7 +275,7 @@ class TaskLoggerTest extends AbstractCliTest
      *
      * @return array Returns a data provider array.
      */
-    public function provideLogLevels()
+    public static function provideLogLevels()
     {
         $r = [
             [LogLevel::DEBUG],

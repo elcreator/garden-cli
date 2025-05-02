@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Todd Burry <todd@vanillaforums.com>
  * @copyright 2009-2020 Vanilla Forums Inc.
@@ -51,8 +52,10 @@ trait MetaTrait
      *
      * This method can take two forms.
      *
-     * 1. `$o->addMeta('name', $value)` assumes that the item at **'name'** is a numeric array and adds **$value** to the end.
-     * 2. `$o->addMeta('name', 'key', $value)` adds **$value** to the array at  **'name'** and uses **'key'** as the key.
+     * 1. `$o->addMeta('name', $value)` assumes that the item at **'name'** is a numeric array and adds **$value**
+     * to the end.
+     * 2. `$o->addMeta('name', 'key', $value)` adds **$value** to the array at  **'name'** and uses **'key'**
+     * as the key.
      *     This may result in an existing item being overwritten.
      *
      * @param string $name The name of the meta key.

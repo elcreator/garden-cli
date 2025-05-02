@@ -9,9 +9,8 @@ namespace Garden\Cli\Tests;
 
 use Garden\Cli\StreamLogger;
 use Psr\Log\LoggerInterface;
-use Psr\Log\Test\LoggerInterfaceTest;
 
-class StreamLoggerInterfaceTest extends LoggerInterfaceTest
+class StreamLoggerInterfaceTest extends LoggerInterfaceTestAbstract
 {
     /**
      * @var StreamLogger

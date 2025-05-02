@@ -8,6 +8,7 @@
 namespace Garden\Cli\Tests\App;
 
 use Garden\Cli\Application\Identifier;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class IdentifierTest extends TestCase
@@ -16,6 +17,7 @@ class IdentifierTest extends TestCase
      * @param array $parts
      * @dataProvider provideIdentifiers
      */
+    #[DataProvider('provideIdentifiers')]
     public function testFrom(
         string $camel,
         string $pascal,
@@ -48,6 +50,7 @@ class IdentifierTest extends TestCase
      * @param array $parts
      * @dataProvider provideIdentifiers
      */
+    #[DataProvider('provideIdentifiers')]
     public function testTo(
         string $camel,
         string $pascal,
@@ -62,7 +65,7 @@ class IdentifierTest extends TestCase
         $this->assertSame($kebab, $id->toKebab());
     }
 
-    public function provideIdentifiers(): array
+    public static function provideIdentifiers(): array
     {
         $r = [
             ["one", "One", "one", "one"],
@@ -78,6 +81,7 @@ class IdentifierTest extends TestCase
      * @param string $expected
      * @dataProvider provideBaseNames
      */
+    #[DataProvider('provideBaseNames')]
     public function testFromBasename($class, string $expected): void
     {
         $actual = Identifier::fromClassBasename($class);
@@ -87,10 +91,9 @@ class IdentifierTest extends TestCase
     /**
      * @return array
      */
-    public function provideBaseNames(): array
+    public static function provideBaseNames(): array
     {
         return [
-            "object" => [$this, "identifier-test"],
             "class name" => [self::class, "identifier-test"],
             "old school" => ["Some_Old_ClassName", "class-name"],
         ];

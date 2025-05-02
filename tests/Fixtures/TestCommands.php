@@ -74,7 +74,7 @@ class TestCommands
      * @param string $foo Hello world.
      * @param Db|null $db Don't reflect me.
      */
-    public function decodeStuff(int $count, string $foo = "bar", Db $db = null)
+    public function decodeStuff(int $count, string $foo = "bar", ?Db $db = null)
     {
         $this->call(__FUNCTION__, compact("count", "foo", "db"));
         return $this;

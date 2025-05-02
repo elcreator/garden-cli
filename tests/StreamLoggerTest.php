@@ -10,7 +10,7 @@ namespace Garden\Cli\Tests;
 use Garden\Cli\StreamLogger;
 use Garden\Cli\TaskLogger;
 
-class StreamLoggerTest extends AbstractCliTest
+class StreamLoggerTest extends CliTestBase
 {
     /**
      * @var StreamLogger
@@ -25,6 +25,7 @@ class StreamLoggerTest extends AbstractCliTest
         parent::setUp();
         $this->log = new StreamLogger("php://output");
         $this->log->setShowDurations(false)->setTimeFormat("k");
+        $this->log->setEol("\n");
     }
 
     /**
@@ -228,9 +229,9 @@ class StreamLoggerTest extends AbstractCliTest
      */
     public function testCustomFile()
     {
-        $path = __DIR__ . "/testCustomFile.log";
-
+        $path = tempnam(sys_get_temp_dir(), 'testCustomFile.log');
         $log = new StreamLogger($path);
+        $log->setEol("\n");
         $log->setTimeFormat("k")->info("a");
         unset($log);
 
@@ -244,15 +245,28 @@ class StreamLoggerTest extends AbstractCliTest
      */
     public function testFileClosed()
     {
-        $path = __DIR__ . "/testCustomFile.log";
+        $path = tempnam(sys_get_temp_dir(), 'testCustomFile.log');
         $fp = fopen($path, "w+");
 
         $log = new StreamLogger($fp);
         fclose($fp);
         unlink($path);
 
-        $this->expectWarning();
-        $log->info("a");
+        $warningTriggered = false;
+        set_error_handler(function($errno, $errstr) use (&$warningTriggered) {
+            if ($errno === E_USER_WARNING) {
+                $warningTriggered = true;
+            }
+            return true;
+        });
+
+        try {
+            $log->info("a");
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertTrue($warningTriggered, 'Expected E_USER_WARNING was not triggered');
     }
 
     /**

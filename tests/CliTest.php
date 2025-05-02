@@ -7,11 +7,12 @@
 namespace Garden\Cli\Tests;
 
 use Garden\Cli\Cli;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Unit tests for the various command line interface classes.
  */
-class CliTest extends AbstractCliTest
+class CliTest extends CliTestBase
 {
     /**
      * Test a cli run with named arguments.
@@ -38,6 +39,7 @@ class CliTest extends AbstractCliTest
      * @param array $argv The args to test.
      * @dataProvider provideBasicArgvs
      */
+    #[DataProvider('provideBasicArgvs')]
     public function testNoCommandParse(array $argv)
     {
         $cli = $this->getBasicCli();
@@ -62,6 +64,7 @@ class CliTest extends AbstractCliTest
      * @param array $argv The args to test.
      * @dataProvider provideBasicArgForms
      */
+    #[DataProvider('provideBasicArgForms')]
     public function testArgForms(array $argv)
     {
         $cli = $this->getBasicCli();
@@ -78,6 +81,7 @@ class CliTest extends AbstractCliTest
      * @param array $expectedOpts The expected opt output.
      * @dataProvider provideBoolArgForms
      */
+    #[DataProvider('provideBoolArgForms')]
     public function testBoolArgForms(array $argv, array $expectedOpts)
     {
         $cli = new Cli();
@@ -97,6 +101,7 @@ class CliTest extends AbstractCliTest
      * @param array $expectedOpts The expected opt output.
      * @dataProvider provideOptionalArgValueForm
      */
+    #[DataProvider('provideOptionalArgValueForm')]
     public function testArgOptionalValue(array $argv, array $expectedOpts)
     {
         $cli = new Cli();
@@ -132,6 +137,7 @@ class CliTest extends AbstractCliTest
      * @param string $message The expected exception message.
      * @dataProvider provideInvalidTypes
      */
+    #[DataProvider('provideInvalidTypes')]
     public function testInvalidTypes(array $argv, $message)
     {
         $this->expectException("\Exception");
@@ -231,7 +237,7 @@ EOT;
 
 EOT;
 
-        $this->expectOutputString($expectedHelp);
+        $this->expectOutputString(str_replace("\n", PHP_EOL, $expectedHelp));
         $this->getBasicCli()
             ->setFormatOutput(true)
             ->writeHelp();
@@ -278,7 +284,7 @@ EOT;
      *
      * @return array Returns args for {@link testNoCommandParse()}.
      */
-    public function provideBasicArgvs()
+    public static function provideBasicArgvs()
     {
         $result = [
             [
@@ -314,7 +320,7 @@ EOT;
      *
      * @return array Returns args for {@link CliTest::testArgForms()}.
      */
-    public function provideBasicArgForms()
+    public static function provideBasicArgForms()
     {
         $result = [
             "long =" => [["script", "--hello=world"]],
@@ -331,7 +337,7 @@ EOT;
      *
      * @return array Returns an array in the form `[$argv, $expectedOpts]`.
      */
-    public function provideBoolArgForms()
+    public static function provideBoolArgForms()
     {
         $result = [
             "plain flags" => [
@@ -363,7 +369,7 @@ EOT;
      *
      * @return array Returns an array in the form `[$argv, $expectedOpts]`.
      */
-    public function provideOptionalArgValueForm()
+    public static function provideOptionalArgValueForm()
     {
         $result = [
             "nothing" => [["script"], []],
@@ -400,7 +406,7 @@ EOT;
      *
      * @return array Returns an array suitable to be used as a data provider.
      */
-    public function provideInvalidTypes()
+    public static function provideInvalidTypes()
     {
         $result = [
             [
@@ -439,6 +445,7 @@ EOT;
      * @param array $expectedOpts The expected opts after the command is parsed.
      * @dataProvider provideArrayOptTests
      */
+    #[DataProvider('provideArrayOptTests')]
     public function testArrayOpt(array $argv, array $expectedOpts): void
     {
         $cli = new Cli();
@@ -459,7 +466,7 @@ EOT;
      *
      * @return array Returns a data provider array.
      */
-    public function provideArrayOptTests(): array
+    public static function provideArrayOptTests(): array
     {
         $r = [
             [["-i123"], ["int" => [123]]],

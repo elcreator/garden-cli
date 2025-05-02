@@ -11,7 +11,7 @@ use Garden\Cli\Args;
 /**
  * Tests for the {@link Args} class.
  */
-class ArgsTest extends AbstractCliTest
+class ArgsTest extends CliTestBase
 {
     /**
      * Test basic get/set functionality.

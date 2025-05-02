@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Todd Burry <todd@vanillaforums.com>
  * @copyright 2009-2019 Vanilla Forums Inc.
@@ -232,9 +233,9 @@ class Args implements JsonSerializable, ArrayAccess
     /**
      * Return the json serializable data for the args.
      *
-     * @return array Returns an array of data that can be used to serialize the args to json.
+     * @return (array|string)[]
      *
-     * @psalm-return array{command: mixed, opts: mixed, args: mixed, meta: mixed}
+     * @psalm-return array{command: string, opts: array, args: array, meta: array}
      */
     public function jsonSerialize(): array
     {

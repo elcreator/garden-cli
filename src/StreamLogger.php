@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Todd Burry <todd@vanillaforums.com>
  * @copyright 2009-2019 Vanilla Forums Inc.
@@ -217,9 +218,10 @@ class StreamLogger implements LoggerInterface
      *
      * @param string $format The message format to replace.
      * @param array $context The context data.
-     * @return string Returns the formatted message.
+     *
+     * @return null|string Returns the formatted message.
      */
-    private function replaceContext(string $format, array $context): string
+    private function replaceContext(string $format, array $context): string|null
     {
         return preg_replace_callback(
             "`({[^\s{}]+})`",
@@ -238,7 +240,8 @@ class StreamLogger implements LoggerInterface
     /**
      * Whether not to buffer the newline for begins.
      *
-     * When logging a begin this setting will buffer the newline and output the end of the task on the same line if possible.
+     * When logging begins this setting will buffer the newline and output the end of the task on the same line
+     * if possible.
      *
      * @return bool Returns the bufferBegins.
      */
@@ -431,7 +434,9 @@ class StreamLogger implements LoggerInterface
      * Format a time duration.
      *
      * @param float $duration The duration in seconds and fractions of a second.
+     *
      * @return string Returns the duration formatted for humans.
+     *
      * @see microtime()
      */
     private function formatDuration(float $duration): string

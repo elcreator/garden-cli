@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Todd Burry <todd@vanillaforums.com>
  * @copyright 2009-2020 Vanilla Forums Inc.

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Todd Burry <todd@vanillaforums.com>
  * @copyright 2009-2019 Vanilla Forums Inc.
@@ -109,10 +110,8 @@ class Table
      * Set whether or not output should be formatted.
      *
      * @param boolean $formatOutput Whether or not to format output.
-     *
-     * @return self
      */
-    public function setFormatOutput(bool $formatOutput): self
+    public function setFormatOutput(bool $formatOutput): static
     {
         $this->formatOutput = $formatOutput;
         return $this;

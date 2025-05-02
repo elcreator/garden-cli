@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Todd Burry <todd@vanillaforums.com>
  * @copyright 2009-2019 Vanilla Forums Inc.
@@ -19,12 +20,12 @@ class TaskLogger implements LoggerInterface
 {
     use LoggerTrait;
 
-    const FIELD_INDENT = "_indent";
-    const FIELD_TIME = "_time";
-    const FIELD_BEGIN = "_begin";
-    const FIELD_END = "_end";
-    const FIELD_DURATION = "_duration";
-    const FIELD_LEVEL = "_level";
+    public const FIELD_INDENT = "_indent";
+    public const FIELD_TIME = "_time";
+    public const FIELD_BEGIN = "_begin";
+    public const FIELD_END = "_end";
+    public const FIELD_DURATION = "_duration";
+    public const FIELD_LEVEL = "_level";
 
     private static array $levels = [
         LogLevel::DEBUG,
@@ -52,11 +53,11 @@ class TaskLogger implements LoggerInterface
     /**
      * TaskLogger constructor.
      *
-     * @param LoggerInterface $logger The logger to ultimately log the information to.
+     * @param ?LoggerInterface $logger The logger to ultimately log the information to.
      * @param string $minLevel The minimum error level that will be logged. One of the **LogLevel** constants.
      */
     public function __construct(
-        LoggerInterface $logger = null,
+        ?LoggerInterface $logger = null,
         string $minLevel = LogLevel::INFO
     ) {
         if ($logger === null) {
@@ -110,7 +111,10 @@ class TaskLogger implements LoggerInterface
      *
      * @param string $a The first log level to compare.
      * @param string $b The second log level to compare.
+     *
      * @return int Returns -1, 0, or 1.
+     *
+     * @psalm-return -1|0|1
      */
     private function compareLevel(string $a, string $b): int
     {
@@ -219,6 +223,8 @@ class TaskLogger implements LoggerInterface
      * Get the current depth of tasks.
      *
      * @return int Returns the current level.
+     *
+     * @psalm-return int<0, max>
      */
     private function currentIndent(): int
     {

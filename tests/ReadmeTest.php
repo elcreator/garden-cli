@@ -11,7 +11,7 @@ use Garden\Cli\Cli;
 /**
  * Provides tests for the sample code in README.md.
  */
-class ReadmeTest extends AbstractCliTest
+class ReadmeTest extends CliTestBase
 {
     /**
      * Test the basic example help.

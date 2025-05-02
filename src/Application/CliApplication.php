@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Todd Burry <todd@vanillaforums.com>
  * @copyright 2009-2020 Vanilla Forums Inc.
@@ -37,12 +38,12 @@ class CliApplication extends Cli
 
     public const TYPE_CALL = "call";
     public const TYPE_PARAMETER = "parameter";
-    const ALLOWED_TYPES = ["int", "string", "bool", "array"];
-    const OPT_COMMAND = "command";
-    const OPT_SETTERS = "setters";
-    const OPT_DESCRIPTION = "description";
-    const OPT_PREFIX = "prefix";
-    const OPT_COMMAND_REGEX = "commandRegex";
+    public const ALLOWED_TYPES = ["int", "string", "bool", "array"];
+    public const OPT_COMMAND = "command";
+    public const OPT_SETTERS = "setters";
+    public const OPT_DESCRIPTION = "description";
+    public const OPT_PREFIX = "prefix";
+    public const OPT_COMMAND_REGEX = "commandRegex";
 
     /**
      * @var Container
@@ -386,7 +387,7 @@ class CliApplication extends Cli
      * Map a class's factory method to the command line.
      *
      * This method takes the name of a class or a container rule and a callable and then makes that callable the factory
-     * for that class or rule. All of the factory's parameters are wired up to command opts and the factory is configured
+     * for that class or rule. All the factory's parameters are wired up to command opts and the factory is configured
      * on the container.
      *
      * @param string $classOrRule The name of the class or container rule you want to set the factory on.
@@ -467,11 +468,12 @@ class CliApplication extends Cli
      * Create a `ReflectionFunctionAbstract` from any callable.
      *
      * @param callable $callable The callable to reflect.
-     * @return ReflectionFunctionAbstract Returns the reflection primitive.
+     *
+     * @return ReflectionMethod|\ReflectionFunction Returns the reflection primitive.
      */
     private static function reflectCallable(
         callable $callable
-    ): ReflectionFunctionAbstract {
+    ): ReflectionMethod|\ReflectionFunction {
         if (is_array($callable)) {
             /** @psalm-suppress PossiblyInvalidArgument */
             return new ReflectionMethod(...$callable);
@@ -539,16 +541,13 @@ class CliApplication extends Cli
      */
     final protected function addSetters(
         ReflectionClass $class,
-        callable $filter = null
+        ?callable $filter = null
     ): void {
         /**
          * @var  string $optName
          * @var  ReflectionMethod $method
          */
-        foreach (
-            $this->reflectSetters($class, $filter)
-            as $optName => $method
-        ) {
+        foreach ($this->reflectSetters($class, $filter) as $optName => $method) {
             $param = $method->getParameters()[0];
             if (null === ($t = $param->getType())) {
                 $type = "string";
@@ -577,12 +576,15 @@ class CliApplication extends Cli
      *
      * @param ReflectionClass $class The class to reflect.
      * @param callable|null $filter A filter used to determine whether or not a method qualifies as a setter.
-     * @return iterable Returns an iterator in the form: `$optName => $reflectionMethod`.
+     *
+     * @return \Generator Returns an iterator in the form: `$optName => $reflectionMethod`.
+     *
+     * @psalm-return \Generator<string, ReflectionMethod, mixed, void>
      */
     final protected function reflectSetters(
         ReflectionClass $class,
-        callable $filter = null
-    ): iterable {
+        ?callable $filter = null
+    ): \Generator {
         if ($filter === null) {
             $filter = [$this, "setterFilter"];
         }
@@ -642,9 +644,6 @@ class CliApplication extends Cli
         ReflectionFunctionAbstract $method,
         array $options = []
     ): void {
-        $options += [
-            self::OPT_PREFIX => "",
-        ];
 
         /**
          * @var OptSchema $opt
@@ -664,7 +663,11 @@ class CliApplication extends Cli
      *
      * @param ReflectionFunctionAbstract $method
      * @param array $options
-     * @return array Returns an array of arrays in the form: `[OptSchema, ReflectionParam]`.
+     *
+     * @return (OptSchema|ReflectionParameter)[][] Returns an array of arrays
+     * in the form: `[OptSchema, ReflectionParam]`.
+     *
+     * @psalm-return array<string, list{OptSchema, ReflectionParameter}>
      */
     private function reflectParams(
         ReflectionFunctionAbstract $method,
@@ -761,7 +764,7 @@ class CliApplication extends Cli
      */
     private function reflectDescription(
         object $method,
-        string $setting = null
+        ?string $setting = null
     ): string {
         if ($setting === null) {
             try {
