@@ -219,6 +219,9 @@ class TaskLoggerTest extends CliTestBase
         } finally {
             restore_error_handler();
         }
+        $this->assertLogLevel(LogLevel::INFO);
+        $this->assertLogHasContext([TaskLogger::FIELD_END => true]);
+        $this->assertLogMessage("foo");
         $this->assertTrue($noticeTriggered, 'Expected E_USER_NOTICE was not triggered');
     }
 
